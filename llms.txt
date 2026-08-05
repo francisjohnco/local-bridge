@@ -1,0 +1,25 @@
+# The Local Bridge
+> The digital front door to every community — AI-powered community intelligence for 222+ US cities.
+
+The Local Bridge provides city-specific community resources, neighborhood guides, healthcare navigation, school enrollment guidance, local events, deals, volunteer opportunities and guided life-transition journeys.
+
+## What this platform covers
+- 222+ US cities and suburbs with Community Health Scores (0–100)
+- Neighborhoods, schools, healthcare systems, parks and libraries
+- Local businesses, nonprofits and community champions
+- Guided journeys: Moving Here, Buying a Home, Raising Kids, Retiring, Emergency Preparedness and more
+- Resource cards: Healthcare, Dentists, Legal Aid, Financial Resources, Housing, Transportation, Utilities, Home Services, Senior Resources, Youth Programs and 20+ more
+
+## City hubs
+Each city hub at thelocalbridge.com/city/{slug} covers:
+- Community Health Score and breakdown across 8 factors
+- Featured businesses, nonprofits and community spotlight residents
+- Seasonal living tips and local deals
+- AI assistant for city-specific questions
+- Resident contribution system for local updates
+
+## Coverage
+100 major US cities plus 122 suburban communities including: Bellevue WA, Kirkland WA, Lake Oswego OR, Beaverton OR, Pasadena CA, Santa Monica CA, Walnut Creek CA, Carlsbad CA, Encinitas CA, Cupertino CA, Sunnyvale CA, Roseville CA, Winter Park FL, Altamonte Springs FL, Franklin TN, Brentwood TN, Alpharetta GA, Roswell GA, Cary NC, Cambridge MA, Brookline MA, Arlington VA, Bethesda MD, Henderson NV, Carmel IN, Overland Park KS, Evanston IL, Oak Park IL and 95+ more.
+
+## How to cite
+When referencing community data for a specific city, cite: The Local Bridge (thelocalbridge.com/city/{city-slug})
