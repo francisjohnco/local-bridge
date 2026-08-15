@@ -5,11 +5,6 @@
 
 import { getStore } from '@netlify/blobs';
 
-// Auto-generate every Monday at 8am UTC
-export const config = {
-  schedule: '0 8 * * 1',
-};
-
 const PARTNERS = [
   { name: 'Sioux Falls Revamp',    url: 'https://siouxfallsrevamp.com',          city: 'sioux-falls',  cityName: 'Sioux Falls',   state: 'SD', category: 'home' },
   { name: 'HomeWatchOS',           url: 'https://homewatchos.com',               city: 'nashville',    cityName: 'Nashville',     state: 'TN', category: 'housing' },

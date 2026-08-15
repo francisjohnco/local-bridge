@@ -102,11 +102,6 @@ Return ONLY valid JSON (no markdown, no explanation):
   }
 }
 
-// Netlify scheduled function config — runs every Monday at 7am UTC
-export const config = {
-  schedule: "0 7 * * 1",
-};
-
 export default async (req) => {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return Response.json({ error: 'ANTHROPIC_API_KEY not set' }, { status: 500 });
