@@ -778,12 +778,12 @@ body.route-admin #adminView{display:block}
 .rc-rel-btn:hover{border-color:var(--honey);color:var(--ink);background:var(--paper2)}
 </style>
   <!-- Google Analytics 4 — replace G-XXXXXXXXXX with your Measurement ID in Netlify env vars -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V0WP82LJM8"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
+    gtag('config', 'G-V0WP82LJM8');
     window.track = function(event, params) {
       if (typeof gtag === "function") gtag("event", event, params || {});
     };
@@ -7551,7 +7551,7 @@ handleVerifyReturn();
     const r = await fetch('/api/sync?action=get&key=platform-settings');
     const d = await r.json();
     if (!d.value) return;
-    const settings = JSON.parse(d.value);
+    const settings = typeof d.value === "string" ? JSON.parse(d.value) : (d.value || {});
     // Apply GA4 ID if set
     if (settings.ga4Id && settings.ga4Id.startsWith('G-')) {
       const s1 = document.querySelector('script[src*="googletagmanager"]');
@@ -8042,7 +8042,7 @@ async function loadSettingsTab(body) {
   try {
     const r = await fetch('/api/sync?action=get&key=platform-settings');
     const d = await r.json();
-    if (d.value) settings = JSON.parse(d.value);
+    if (d.value) settings = typeof d.value === "string" ? JSON.parse(d.value) : d.value;
   } catch (_) {}
 
   body.innerHTML = `<div style="padding:4px 0;max-width:600px">
