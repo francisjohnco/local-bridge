@@ -51,6 +51,10 @@ async function generateBrief(apiKey, partner, context, isFeature) {
     headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
     body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 400, messages: [{ role: 'user', content: prompt }] })
   });
+  if (!r.ok) {
+    const errText = await r.text();
+    throw new Error('Anthropic API ' + r.status + ': ' + errText.slice(0, 300));
+  }
   const d = await r.json();
   const text = (d.content || []).filter(b => b.type === 'text').map(b => b.text).join('').trim();
   try {
