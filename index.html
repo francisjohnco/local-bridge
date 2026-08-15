@@ -6646,6 +6646,11 @@ async function loadCardResourcesTab(body) {
     '<p style="font-size:.84rem;color:var(--ink-soft);margin-bottom:20px">Add expert guides and trusted sources to any resource card. Appear at top of card for all residents in that city or scope.</p>' +
     '<div id="crForm" style="display:none;background:rgba(111,179,169,.05);border:1.5px solid rgba(111,179,169,.3);border-radius:12px;padding:18px 20px;margin-bottom:20px">' +
     '<h4 style="font-family:var(--f-disp);font-size:1rem;margin-bottom:14px">Add new resource</h4>' +
+    '<div style="margin-bottom:14px;padding:10px 12px;background:rgba(111,179,169,.05);border:1px solid rgba(111,179,169,.2);border-radius:8px">' +
+    '<div style="font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tide);margin-bottom:5px">Quick Add — paste any formatted block</div>' +
+    '<textarea id="crQuickPaste" rows="4" placeholder="Paste a block like:\nType: Trusted Source\nCoverage: All cities (national)\nName: Francis John\nURL: https://francisjohn.co\nCard: Home Services\nDescription: Your description here" style="width:100%;padding:8px 10px;border:1px solid var(--line-light);border-radius:7px;font-size:.82rem;resize:vertical;margin-bottom:7px"></textarea>' +
+    '<button class="btn btn-sm" style="border:1px solid var(--tide);color:var(--tide);background:none;border-radius:6px;padding:5px 12px;font-size:.8rem;cursor:pointer" onclick="crQuickFill()">Extract & fill fields →</button>' +
+    '</div>' +
     '<div style="display:flex;flex-direction:column;gap:10px">' +
     '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
     '<div style="flex:1;min-width:180px"><label style="font-size:.72rem;font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);display:block;margin-bottom:4px">Card category *</label>' +
@@ -7441,6 +7446,74 @@ function renderEditionEmpty(container, c) {
     '<button class="edition-sub-btn" id="edSubBtn">Notify me</button></div></div>';
   container.appendChild(wrap);
 }
+
+window.crQuickFill = function() {
+  const raw = (document.getElementById('crQuickPaste') || {}).value || '';
+  if (!raw.trim()) return;
+
+  function extract(label) {
+    const re = new RegExp(label + '[:\s]+([^\n]+)', 'i');
+    const m = raw.match(re);
+    return m ? m[1].replace(/^`|`$/g,'').trim() : '';
+  }
+
+  // Extract fields
+  const type     = extract('type');
+  const coverage = extract('coverage');
+  const name     = extract('name');
+  const url      = extract('url');
+  const desc     = extract('description');
+  const card     = extract('card');
+
+  // Fill type
+  const typeEl = document.getElementById('crType');
+  if (typeEl && type) {
+    const typeMap = { 'expert guide':'expert', 'trusted source':'trusted', 'official':'official' };
+    const typeVal = typeMap[type.toLowerCase()] || type.toLowerCase();
+    typeEl.value = typeVal;
+  }
+
+  // Fill name
+  const nameEl = document.getElementById('crName');
+  if (nameEl && name) nameEl.value = name;
+
+  // Fill URL
+  const urlEl = document.getElementById('crUrl');
+  if (urlEl && url) urlEl.value = url;
+
+  // Fill description
+  const descEl = document.getElementById('crDesc');
+  if (descEl && desc) descEl.value = desc;
+
+  // Fill coverage scope
+  if (coverage) {
+    const cov = coverage.toLowerCase();
+    const scopeBtns = document.querySelectorAll('.cr-scope-btn');
+    scopeBtns.forEach(btn => {
+      const sc = btn.dataset.scope;
+      const match = (cov.includes('all') && sc === 'all') ||
+                    (cov.includes('state') && sc === 'state') ||
+                    (cov.includes('city') && sc === 'city' && !cov.includes('all'));
+      if (match) btn.click();
+    });
+  }
+
+  // Fill card category
+  if (card) {
+    const cardEl = document.getElementById('crCard');
+    if (cardEl) {
+      const opts = [...cardEl.options];
+      const match = opts.find(o => o.text.toLowerCase().includes(card.toLowerCase()) || o.value.toLowerCase().includes(card.toLowerCase().replace(/\s+/g,'-')));
+      if (match) cardEl.value = match.value;
+    }
+  }
+
+  // Clear the paste field and show confirmation
+  const pasteEl = document.getElementById('crQuickPaste');
+  if (pasteEl) pasteEl.value = '';
+  const btn = document.querySelector('[onclick="crQuickFill()"]');
+  if (btn) { const orig = btn.textContent; btn.textContent = '✓ Fields filled — review and save'; setTimeout(() => { btn.textContent = orig; }, 3000); }
+};
 
 window.gscSave = async function() {
   const input = document.getElementById('gscFilename');
