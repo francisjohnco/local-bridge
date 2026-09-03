@@ -1,0 +1,57 @@
+[build]
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[edge_functions]]
+  path = "/city/*"
+  function = "prerender"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/webhook"
+  to = "/.netlify/functions/webhook"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/.netlify/functions/sitemap"
+  status = 200
+
+[[redirects]]
+  from = "/admin"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/business-dashboard"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/city/*/directory"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/city/*/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/city/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
