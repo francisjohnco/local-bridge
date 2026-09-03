@@ -501,8 +501,8 @@ body.route-city #appView{display:block}
 
 /* ===== FOOTER ===== */
 .footer{background:var(--ink);color:var(--paper-soft);padding:64px 0 40px;border-top:1px solid var(--line-dark)}
-.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:40px}
-@media(max-width:840px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1.2fr 1fr 1fr 1fr;gap:36px}
+@media(max-width:900px){.foot-grid{grid-template-columns:1fr 1fr 1fr;gap:24px}}@media(max-width:600px){.foot-grid{grid-template-columns:1fr 1fr;gap:20px}}
 @media(max-width:480px){.foot-grid{grid-template-columns:1fr}}
 .foot-grid h4{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--tide);margin:0 0 .9rem;font-weight:400}
 .foot-grid button{display:block;background:none;border:0;text-align:left;color:var(--paper-soft);font-size:.9rem;padding:.28rem 0;cursor:pointer;transition:color .2s;width:100%}
@@ -1028,6 +1028,14 @@ body.route-admin #adminView{display:block}
         <button data-nav="health">Community Health Score</button>
         <button data-ask="" data-city="">Ask Alpha</button>
         <button data-contribute="place">For communities</button>
+      </div>
+      <div>
+        <h4>The Edition</h4>
+        <a class="foot-net-link" href="/editions" onclick="navigate(this.getAttribute('href'));return false;">Archive</a>
+        <a class="foot-net-link" href="/edition/latest" onclick="navigate(this.getAttribute('href'));return false;">Latest issue</a>
+        <a class="foot-net-link" href="/city/sioux-falls" onclick="navigate(this.getAttribute('href'));return false;">Sioux Falls hub</a>
+        <a class="foot-net-link" href="/city/nashville" onclick="navigate(this.getAttribute('href'));return false;">Nashville hub</a>
+        <a class="foot-net-link" href="/city/denver" onclick="navigate(this.getAttribute('href'));return false;">Denver hub</a>
       </div>
       <div>
         <h4>The network</h4>
