@@ -7467,7 +7467,7 @@ async function renderEdition(slug, container) {
     // Add archive link after subscribe strip
     const archLink = document.createElement('div');
     archLink.style.cssText = 'padding:9px 0;text-align:center;border-top:1px solid var(--ink-12)';
-    archLink.innerHTML = '<a href="/editions" onclick="navigate(this.getAttribute('href'));return false;" style="font-family:var(--f-mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-35);text-decoration:none">Browse all past issues →</a>';
+    archLink.innerHTML = '<a href="/editions" onclick="navigate(this.getAttribute(\'href\'));return false;" style="font-family:var(--f-mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-35);text-decoration:none">Browse all past issues →</a>';
     wrap.appendChild(archLink);
     container.appendChild(wrap);
 
