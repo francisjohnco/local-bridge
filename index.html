@@ -8366,6 +8366,32 @@ async function loadSettingsTab(body) {
       <h4 style="font-size:1rem;margin-bottom:6px">Email Subscribers</h4>
       <div id="stSubCount" style="font-size:.86rem;color:var(--ink-soft)">Loading…</div>
     </div>
+
+    <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--line-light)">
+      <h4 style="font-size:1rem;margin-bottom:4px">Google Search Console</h4>
+      <p style="font-size:.84rem;color:var(--ink-soft);margin-bottom:14px">Connect your site to Google so your 222 cities and resource cards get indexed. Three steps, about 2 minutes.</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="padding:12px 14px;border:1px solid var(--line-light);border-radius:8px">
+          <div style="font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tide);margin-bottom:5px">Step 1 — Open Search Console</div>
+          <p style="font-size:.82rem;color:var(--ink-soft);margin-bottom:8px">Click below. Add <b>https://thelocalbridge.com</b> as a URL prefix property. Choose <b>HTML file</b> verification. Copy the filename it gives you.</p>
+          <button class="btn btn-primary btn-sm" onclick="window.open('https://search.google.com/search-console/welcome','_blank')">Open Google Search Console ↗</button>
+        </div>
+        <div style="padding:12px 14px;border:1px solid var(--line-light);border-radius:8px">
+          <div style="font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tide);margin-bottom:5px">Step 2 — Paste the filename</div>
+          <p style="font-size:.82rem;color:var(--ink-soft);margin-bottom:8px">Paste the filename Google gives you (looks like <b>google1a2b3c.html</b>). We serve it automatically — no redeploy needed.</p>
+          <div style="display:flex;gap:8px">
+            <input id="gscFilename" placeholder="google1a2b3c4d.html" style="flex:1;padding:8px 10px;border:1px solid var(--line-light);border-radius:7px;font-size:.88rem">
+            <button class="btn btn-primary btn-sm" id="gscSaveBtn" onclick="gscSave()">Save &amp; activate</button>
+          </div>
+          <div id="gscMsg" style="display:none;margin-top:8px;font-size:.82rem;padding:7px 10px;border-radius:6px"></div>
+        </div>
+        <div id="gscStep3" style="padding:12px 14px;border:1px solid rgba(111,179,169,.3);border-radius:8px;background:rgba(111,179,169,.04);display:none">
+          <div style="font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tide);margin-bottom:5px">Step 3 — Verify &amp; submit sitemap</div>
+          <p style="font-size:.82rem;color:var(--ink-soft);margin-bottom:8px">Go back to Search Console and click <b>Verify</b>. Once verified, click below to submit your sitemap.</p>
+          <button class="btn btn-primary btn-sm" onclick="window.open('https://search.google.com/search-console/sitemaps?resource_id=https%3A%2F%2Fthelocalbridge.com%2F','_blank')">Submit sitemap to Google ↗</button>
+        </div>
+      </div>
+    </div>
   </div>`;
 
   // Check Stripe status
