@@ -1028,8 +1028,8 @@ body.route-admin #adminView{display:block}
         <button data-nav="health">Community Health Score</button>
         <button data-ask="" data-city="">Ask Alpha</button>
         <button data-contribute="place">For communities</button>
-        <a class="foot-net-link" href="/editions" onclick="navigate(this.getAttribute('href'));return false;">Edition archive</a>
-        <a class="foot-net-link" href="/edition/latest" onclick="navigate(this.getAttribute('href'));return false;">Latest issue</a>
+        <a class="foot-net-link" href="/editions" onclick="navigate('/editions');return false;">Edition archive</a>
+        <a class="foot-net-link" href="/edition/latest" onclick="navigate('/edition/latest');return false;">Latest issue</a>
       </div>
 
       <div>
@@ -7006,11 +7006,11 @@ function router() {
   const mc = h.match(/^\/city\/([\w-]+)\/([\w-]+)/);
   if (mc && CITY[mc[1]] && CAT_LABEL[mc[2]]) { renderHub(mc[1]); setTimeout(() => openCard(mc[1], mc[2]), 350); return; }
   // Archive: /editions
-  if (h === '/editions') { document.body.classList.remove('route-city'); currentCity = null;
+  if (h === '/editions') { document.body.classList.add('route-city'); currentCity = null;
     $('#appView').innerHTML = ''; renderEditionsArchive(); return; }
   // Article: /edition/2026-W34
   const med = h.match(/^\/edition\/([\w-]+)/);
-  if (med) { document.body.classList.remove('route-city'); currentCity = null;
+  if (med) { document.body.classList.add('route-city'); currentCity = null;
     $('#appView').innerHTML = ''; renderEditionArticlePage(med[1]); return; }
   // City hub URL: /city/nashville
   const m = h.match(/^\/city\/([\w-]+)/);
