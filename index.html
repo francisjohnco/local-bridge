@@ -7579,13 +7579,19 @@ window.crQuickFill = function() {
 async function renderEditionArticlePage(week) {
   document.title = 'The Local Bridge Edition';
   const view = document.getElementById('appView');
-  view.innerHTML = '<div style="max-width:780px;margin:0 auto;padding:40px 20px"><div style="color:var(--ink-soft);font-size:.9rem">Loading edition\u2026</div></div>';
+  view.style.cssText = 'display:block';
+  view.innerHTML = '<div style="padding:80px 20px 40px;max-width:700px;margin:0 auto"><div style="color:var(--ink-soft);font-size:.9rem">Loading edition\u2026</div></div>';
 
   try {
     const endpoint = week === 'latest' ? '/api/edition?action=get' : '/api/edition?action=get&week=' + encodeURIComponent(week);
     const r = await fetch(endpoint);
     const d = await r.json();
-    if (!d.ok || !d.edition) { view.innerHTML = '<div style="max-width:780px;margin:0 auto;padding:60px 20px;text-align:center"><p style="color:var(--ink-soft)">Edition not found.</p><a href="/editions" onclick="navigate(this.getAttribute(\'href\'));return false;" style="color:var(--tide);font-family:var(--f-mono);font-size:.8rem">Browse all editions \u2192</a></div>'; return; }
+    if (!d.ok || !d.edition) {
+      view.innerHTML = '<div style="padding:100px 20px 40px;max-width:700px;margin:0 auto;text-align:center">' +
+        '<p style="color:var(--ink-soft);margin-bottom:16px">Edition not found.</p>' +
+        '<a href="/editions" onclick="navigate(\'/editions\');return false;" style="color:var(--tide);font-family:var(--f-mono);font-size:.8rem">Browse all editions \u2192</a></div>';
+      return;
+    }
     const ed = d.edition;
     const f  = ed.feature || {};
     const briefs = (ed.briefs || []).slice(0,4);
@@ -7594,61 +7600,53 @@ async function renderEditionArticlePage(week) {
     document.title = (f.headline || 'Community Intelligence') + ' | The Local Bridge Edition';
 
     view.innerHTML =
-      '<div style="max-width:780px;margin:0 auto;padding:0 16px 60px">' +
+      '<div style="max-width:700px;margin:0 auto;padding:80px 20px 60px">' +
 
-      // Chrome nav
-      '<div style="background:var(--ink);margin:0 -16px;padding:12px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:0">' +
-        '<span style="font-family:var(--f-disp);font-size:.9rem;font-weight:700;color:var(--paper)">The Local Bridge</span>' +
-        '<nav style="display:flex;gap:16px">' +
-          '<a href="/" onclick="navigate(this.getAttribute(\'href\'));return false;" style="font-family:var(--f-mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,238,225,.45);text-decoration:none">Home</a>' +
-          '<a href="/editions" onclick="navigate(this.getAttribute(\'href\'));return false;" style="font-family:var(--f-mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tide);text-decoration:none">Archive</a>' +
-        '</nav>' +
-      '</div>' +
-
-      // Article header
-      '<div style="padding:44px 0 28px;border-bottom:1px solid var(--ink-12)">' +
-        '<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">' +
-          '<span style="font-family:var(--f-mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tide)">\uD83D\uDCCD ' + esc(f.cityName||'') + ', ' + esc(f.state||'') + '</span>' +
-          (f.category ? '<span style="background:rgba(233,162,59,.12);border:1px solid rgba(233,162,59,.25);border-radius:4px;padding:2px 7px;font-family:var(--f-mono);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--honey)">' + esc(f.category.charAt(0).toUpperCase()+f.category.slice(1)) + '</span>' : '') +
+      // Kicker + headline
+      '<div style="padding-bottom:28px;border-bottom:1px solid var(--ink-12);margin-bottom:32px">' +
+        '<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">' +
+          '<span style="font-family:var(--f-mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tide)">\uD83D\uDCCD ' + esc(f.cityName||'') + ', ' + esc(f.state||'') + '</span>' +
+          (f.category ? '<span style="background:rgba(233,162,59,.12);border:1px solid rgba(233,162,59,.25);border-radius:4px;padding:2px 8px;font-family:var(--f-mono);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--honey)">' + esc(f.category.charAt(0).toUpperCase()+f.category.slice(1)) + '</span>' : '') +
         '</div>' +
-        '<h1 style="font-family:var(--f-disp);font-size:clamp(1.5rem,3.2vw,2.1rem);font-weight:700;color:var(--ink);line-height:1.18;letter-spacing:-.01em;margin-bottom:14px;max-width:580px">' + esc(f.headline||'Community Intelligence Brief') + '</h1>' +
-        (f.lede ? '<p style="font-size:1rem;color:var(--ink-60);line-height:1.65;max-width:520px;margin-bottom:20px;font-style:italic">' + esc(f.lede) + '</p>' : '') +
-        '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">' +
-          '<div style="display:flex;align-items:center;gap:8px">' +
-            '<div style="width:26px;height:26px;border-radius:50%;background:rgba(111,179,169,.15);border:1px solid rgba(111,179,169,.3);display:flex;align-items:center;justify-content:center;font-size:12px">&#x1F4F0;</div>' +
-            '<div style="font-size:.8rem;color:var(--ink-60)"><strong style="color:var(--ink);font-weight:600;display:block;font-size:.84rem">' + esc(f.source||'The Local Bridge') + '</strong>Community intelligence</div>' +
+        '<h1 style="font-family:var(--f-disp);font-size:clamp(1.7rem,4vw,2.4rem);font-weight:700;color:var(--ink);line-height:1.16;letter-spacing:-.02em;margin-bottom:18px">' + esc(f.headline||'Community Intelligence Brief') + '</h1>' +
+        (f.lede ? '<p style="font-size:1.08rem;color:var(--ink-60);line-height:1.68;font-style:italic;margin-bottom:24px">' + esc(f.lede) + '</p>' : '') +
+        // Byline
+        '<div style="display:flex;align-items:center;gap:12px;padding-top:20px;border-top:1px solid var(--ink-12);flex-wrap:wrap">' +
+          '<div style="display:flex;align-items:center;gap:9px">' +
+            '<div style="width:30px;height:30px;border-radius:50%;background:rgba(111,179,169,.15);border:1px solid rgba(111,179,169,.3);display:flex;align-items:center;justify-content:center;font-size:13px">\uD83D\uDCF0</div>' +
+            '<div><strong style="color:var(--ink);font-size:.86rem;display:block">' + esc(f.source||'The Local Bridge') + '</strong><span style="color:var(--ink-60);font-size:.78rem">Community intelligence</span></div>' +
           '</div>' +
-          '<span style="font-family:var(--f-mono);font-size:.56rem;color:var(--ink-35);letter-spacing:.08em;margin-left:auto">' + issueStr + ' \xb7 ' + esc(ed.week||'') + '</span>' +
+          '<span style="font-family:var(--f-mono);font-size:.58rem;color:var(--ink-35);margin-left:auto">' + issueStr + ' \xb7 ' + esc(ed.week||'') + '</span>' +
         '</div>' +
       '</div>' +
 
-      // Article body
-      '<div style="padding:36px 0 40px">' +
-        '<p style="font-family:var(--f-disp);font-size:1.06rem;color:var(--ink);line-height:1.78;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--ink-12)">' + esc(f.lede||'') + '</p>' +
-        (f.pullQuote ? '<div style="margin:24px 0;padding:18px 24px;border-left:3px solid var(--honey);background:rgba(233,162,59,.04)"><p style="font-family:var(--f-disp);font-size:1.08rem;font-style:italic;color:var(--ink);line-height:1.5">' + esc(f.pullQuote) + '</p></div>' : '') +
-        '<p style="font-size:.95rem;color:var(--ink);line-height:1.82;margin-bottom:20px;max-width:580px">This week The Local Bridge is tracking what matters most in ' + esc(f.cityName||'your city') + ' and beyond. Our community intelligence system reads trusted local sources and surfaces what residents need to know — without the noise.</p>' +
+      // Body
+      '<div style="margin-bottom:40px">' +
+        '<p style="font-size:.97rem;color:var(--ink);line-height:1.85;margin-bottom:22px">This week The Local Bridge is tracking what matters most in ' + esc(f.cityName||'your city') + '. Our community intelligence system reads trusted local sources and surfaces what residents need to know — the information that rarely makes the news but shapes daily life.</p>' +
+        (f.pullQuote ? '<div style="margin:28px 0;padding:20px 28px;border-left:3px solid var(--honey);background:rgba(233,162,59,.04)"><p style="font-family:var(--f-disp);font-size:1.1rem;font-style:italic;color:var(--ink);line-height:1.5">' + esc(f.pullQuote) + '</p></div>' : '') +
+        '<p style="font-size:.97rem;color:var(--ink);line-height:1.85;margin-bottom:22px">Local knowledge is the hardest kind to find. It lives in conversations, in the experience of long-time residents, in the patterns only someone who actually lives there would notice. The Local Bridge exists to surface exactly that — so whether you\'re moving in, passing through, or putting down deeper roots, you know what the locals know.</p>' +
         // Source block
-        '<div style="margin-top:32px;padding:16px 20px;background:rgba(111,179,169,.06);border:1px solid rgba(111,179,169,.2);border-radius:10px;display:flex;gap:12px;align-items:flex-start">' +
-          '<div style="width:32px;height:32px;border-radius:7px;background:rgba(111,179,169,.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">&#x1F4F0;</div>' +
-          '<div style="font-size:.82rem;color:var(--ink-60);line-height:1.6">' +
-            '<strong style="color:var(--ink);font-weight:600">Sourced from ' + esc(f.source||'The Local Bridge') + '</strong><br>' +
-            'This brief draws from content published by our community intelligence partners. The Local Bridge curates and contextualizes partner content for residents.' +
-            (f.sourceUrl ? '<br><a href="' + esc(f.sourceUrl) + '" target="_blank" rel="noopener" style="color:var(--tide);text-decoration:none;font-family:var(--f-mono);font-size:.76rem;display:inline-block;margin-top:4px">Visit ' + esc(f.source||'source') + ' \u2197</a>' : '') +
+        '<div style="margin-top:36px;padding:18px 22px;background:rgba(111,179,169,.06);border:1px solid rgba(111,179,169,.2);border-radius:10px;display:flex;gap:12px;align-items:flex-start">' +
+          '<div style="width:34px;height:34px;border-radius:8px;background:rgba(111,179,169,.15);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">\uD83D\uDCF0</div>' +
+          '<div style="font-size:.84rem;color:var(--ink-60);line-height:1.65">' +
+            '<strong style="color:var(--ink);display:block;margin-bottom:3px">Sourced from ' + esc(f.source||'The Local Bridge') + '</strong>' +
+            'This intelligence brief draws from content published by our community partners. The Local Bridge curates and contextualizes partner content for residents.' +
+            (f.sourceUrl ? '<br><a href="' + esc(f.sourceUrl) + '" target="_blank" rel="noopener" style="color:var(--tide);text-decoration:none;font-family:var(--f-mono);font-size:.76rem;display:inline-block;margin-top:6px">Visit ' + esc(f.source||'source') + ' \u2197</a>' : '') +
           '</div>' +
         '</div>' +
       '</div>' +
 
       // Supporting briefs
       (briefs.length ?
-        '<div style="padding-top:24px;border-top:2px solid var(--ink)">' +
-          '<p style="font-family:var(--f-mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-35);padding-bottom:12px;border-bottom:1px solid var(--ink-12);margin-bottom:16px">Also this week</p>' +
-          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px">' +
+        '<div style="padding-top:28px;border-top:3px solid var(--ink);margin-bottom:40px">' +
+          '<p style="font-family:var(--f-mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-35);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--ink-12)">Also this week</p>' +
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">' +
           briefs.map(function(b){
-            return '<div style="padding-top:10px;border-top:1px solid var(--ink-12)">' +
-              '<p style="font-family:var(--f-mono);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tide);margin-bottom:4px">' + esc(b.cityName||'') + ', ' + esc(b.state||'') + '</p>' +
-              '<p style="font-family:var(--f-disp);font-size:.88rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:4px">' + esc(b.headline||'') + '</p>' +
-              '<p style="font-size:.78rem;color:var(--ink-60);line-height:1.6">' + esc(b.text||'') + '</p>' +
-              '<p style="font-family:var(--f-mono);font-size:.52rem;color:var(--ink-35);margin-top:4px">Via ' + esc(b.source||'') + '</p>' +
+            return '<div style="padding-top:12px;border-top:1px solid var(--ink-12)">' +
+              '<p style="font-family:var(--f-mono);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tide);margin-bottom:5px">' + esc(b.cityName||'') + ', ' + esc(b.state||'') + '</p>' +
+              '<p style="font-family:var(--f-disp);font-size:.9rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:6px">' + esc(b.headline||'') + '</p>' +
+              '<p style="font-size:.8rem;color:var(--ink-60);line-height:1.65">' + esc(b.text||b.lede||'') + '</p>' +
+              '<p style="font-family:var(--f-mono);font-size:.52rem;color:var(--ink-35);margin-top:6px">Via ' + esc(b.source||'') + '</p>' +
             '</div>';
           }).join('') +
           '</div>' +
@@ -7656,59 +7654,47 @@ async function renderEditionArticlePage(week) {
       : '') +
 
       // Bottom nav
-      '<div style="padding-top:16px;border-top:2px solid var(--ink);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">' +
-        '<a href="/editions" onclick="navigate(this.getAttribute(\'href\'));return false;" style="font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-60);text-decoration:none">\u2190 All editions</a>' +
-        '<div style="display:flex;gap:7px">' +
-          '<button onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : navigator.clipboard.writeText(location.href)" style="font-family:var(--f-mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:5px;cursor:pointer;border:1.5px solid var(--ink-12);background:none;color:var(--ink-60)">Share</button>' +
-          (f.citySlug ? '<a href="/city/' + esc(f.citySlug) + '" onclick="navigate(this.getAttribute(\'href\'));return false;" style="font-family:var(--f-mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:5px;cursor:pointer;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none">Back to ' + esc(f.cityName||'city') + ' \u2192</a>' : '') +
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-top:20px;border-top:2px solid var(--ink)">' +
+        '<a href="/editions" onclick="navigate(\'/editions\');return false;" style="font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-60);text-decoration:none">\u2190 All editions</a>' +
+        '<div style="display:flex;gap:8px">' +
+          '<button onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : navigator.clipboard.writeText(location.href).then(function(){alert(\'Link copied!\')})" style="font-family:var(--f-mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:6px;cursor:pointer;border:1.5px solid var(--ink-12);background:none;color:var(--ink-60)">Share</button>' +
+          (f.citySlug ? '<a href="/city/' + esc(f.citySlug) + '" onclick="navigate(\'/city/' + esc(f.citySlug) + '\');return false;" style="font-family:var(--f-mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:6px;text-decoration:none;background:var(--ink);color:var(--paper)">' + esc(f.cityName||'City') + ' hub \u2192</a>' : '') +
         '</div>' +
       '</div>' +
-
       '</div>';
 
   } catch(e) {
-    view.innerHTML = '<div style="max-width:780px;margin:0 auto;padding:60px 20px;text-align:center"><p style="color:var(--ink-soft)">Could not load edition. ' + esc(e.message) + '</p></div>';
+    view.innerHTML = '<div style="padding:100px 20px 40px;max-width:700px;margin:0 auto;text-align:center"><p style="color:var(--ink-soft)">Could not load edition. ' + esc(e.message) + '</p></div>';
   }
 }
 
-/* =========================================================
-   EDITIONS ARCHIVE PAGE — /editions
-   ========================================================= */
+
 async function renderEditionsArchive() {
   document.title = 'Edition Archive | The Local Bridge';
   const view = document.getElementById('appView');
-  view.innerHTML = '<div style="max-width:780px;margin:0 auto;padding:40px 20px"><div style="color:var(--ink-soft);font-size:.9rem">Loading archive\u2026</div></div>';
+  view.style.cssText = 'display:block';
+  view.innerHTML = '<div style="padding:80px 20px 40px;max-width:700px;margin:0 auto"><div style="color:var(--ink-soft);font-size:.9rem">Loading archive\u2026</div></div>';
 
   try {
-    // Fetch all stored editions from Blobs
-    const r = await fetch('/api/sync?action=list&prefix=edition/2');
-    const d = await r.json();
-    const weeks = (d.items||[]).map(i => i.key.replace('edition/',''))
-      .filter(k => k.match(/^\d{4}-W\d+$/))
-      .sort((a,b) => b.localeCompare(a));
-
-    // Fetch each edition's data
+    // Fetch latest edition as starting point
+    const lr = await fetch('/api/edition?action=get');
+    const ld = await lr.json();
     const editions = [];
-    for (const w of weeks.slice(0,20)) {
+    if (ld.ok && ld.edition) editions.push(ld.edition);
+
+    function weekToDate(week) {
       try {
-        const er = await fetch('/api/sync?action=get&key=edition/' + w);
-        const ed = await er.json();
-        if (ed.value) editions.push({ week: w, ...(typeof ed.value === 'string' ? JSON.parse(ed.value) : ed.value) });
-      } catch(_) {}
+        const [yr, w] = week.split('-W');
+        const d = new Date(parseInt(yr), 0, 1 + (parseInt(w)-1)*7);
+        return d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+      } catch(_) { return week; }
     }
-
-    // Also fetch latest
-    if (!editions.length) {
-      const lr = await fetch('/api/edition?action=get');
-      const ld = await lr.json();
-      if (ld.ok && ld.edition) editions.push(ld.edition);
-    }
-
-    // Group by month
     function weekToMonth(week) {
-      const [yr, w] = week.split('-W');
-      const d = new Date(parseInt(yr), 0, 1 + (parseInt(w)-1)*7);
-      return d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+      try {
+        const [yr, w] = week.split('-W');
+        const d = new Date(parseInt(yr), 0, 1 + (parseInt(w)-1)*7);
+        return d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+      } catch(_) { return '2026'; }
     }
 
     const byMonth = {};
@@ -7719,58 +7705,58 @@ async function renderEditionsArchive() {
     });
 
     view.innerHTML =
-      '<div style="max-width:780px;margin:0 auto;padding:0 16px 60px">' +
+      '<div style="max-width:700px;margin:0 auto;padding:0 20px 60px">' +
 
-      // Dark header
-      '<div style="background:var(--ink);margin:0 -16px;padding:40px 48px 32px">' +
-        '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">' +
-          '<span style="font-family:var(--f-disp);font-size:.88rem;font-weight:700;color:rgba(244,238,225,.45)">The Local Bridge</span>' +
-          '<span style="font-family:var(--f-mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,238,225,.28)">' + editions.length + ' issues published</span>' +
-        '</div>' +
-        '<h1 style="font-family:var(--f-disp);font-size:clamp(1.5rem,3vw,2rem);font-weight:700;color:var(--paper);line-height:1.2;margin-bottom:8px">Edition Archive</h1>' +
-        '<p style="font-size:.88rem;color:rgba(244,238,225,.5);line-height:1.6">Every week of community intelligence \u2014 222 cities, sourced and summarized.</p>' +
+      // Dark header — full bleed feel
+      '<div style="background:var(--ink);margin:0 -20px;padding:72px 40px 40px">' +
+        '<p style="font-family:var(--f-mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,238,225,.35);margin-bottom:14px">The Local Bridge</p>' +
+        '<h1 style="font-family:var(--f-disp);font-size:clamp(1.8rem,4vw,2.4rem);font-weight:700;color:var(--paper);line-height:1.18;margin-bottom:12px">Edition Archive</h1>' +
+        '<p style="font-size:.92rem;color:rgba(244,238,225,.55);line-height:1.65;max-width:440px">Every week of community intelligence \u2014 222 cities, sourced and summarized. Browse past issues below.</p>' +
       '</div>' +
 
       // Issues list
-      '<div style="padding:28px 0 40px">' +
-      Object.entries(byMonth).map(([month, eds]) =>
-        '<div style="margin-bottom:24px">' +
-          '<p style="font-family:var(--f-mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-35);padding-bottom:9px;border-bottom:1px solid var(--ink-12);margin-bottom:12px">' + esc(month) + '</p>' +
-          eds.map(ed => {
-            const f = ed.feature || {};
-            const bs = (ed.briefs||[]).slice(0,3).map(b=>b.cityName||'').filter(Boolean);
-            return '<div onclick="navigate(\'/edition/' + esc(ed.week||'latest') + '\')" style="display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--ink-12);cursor:pointer">' +
-              '<span style="font-family:var(--f-mono);font-size:.58rem;color:var(--ink-35);letter-spacing:.06em;min-width:52px;padding-top:2px;flex-shrink:0">' + esc(ed.week||'') + '</span>' +
-              '<div style="flex:1">' +
-                '<p style="font-family:var(--f-disp);font-size:.95rem;font-weight:700;color:var(--ink);line-height:1.28;margin-bottom:3px">' + esc(f.headline||'Community Intelligence Brief') + '</p>' +
-                '<p style="font-size:.76rem;color:var(--ink-60)">Featured: <span style="color:var(--tide)">' + esc(f.cityName||'') + '</span>' + (bs.length ? ' \xb7 Also: ' + bs.join(' \xb7 ') : '') + '</p>' +
-              '</div>' +
-              '<span style="color:var(--ink-35);font-size:.78rem;padding-top:2px;flex-shrink:0">\u2192</span>' +
-            '</div>';
-          }).join('') +
-        '</div>'
-      ).join('') +
+      '<div style="padding:36px 0 0">' +
+      (editions.length === 0 ?
+        '<p style="color:var(--ink-soft);font-size:.9rem;padding:20px 0">No editions generated yet. Go to admin \u2192 Edition \u2192 Generate to create the first issue.</p>'
+      :
+        Object.entries(byMonth).map(function([month, eds]) {
+          return '<div style="margin-bottom:28px">' +
+            '<p style="font-family:var(--f-mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-35);padding-bottom:10px;border-bottom:1px solid var(--ink-12);margin-bottom:14px">' + esc(month) + '</p>' +
+            eds.map(function(ed) {
+              const f = ed.feature || {};
+              const bs = (ed.briefs||[]).slice(0,3).map(function(b){ return b.cityName||''; }).filter(Boolean);
+              return '<div onclick="navigate(\'/edition/' + esc(ed.week||'latest') + '\')" style="display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--ink-12);cursor:pointer;transition:background .15s" onmouseenter="this.style.marginLeft=\'4px\'" onmouseleave="this.style.marginLeft=\'0\'">' +
+                '<span style="font-family:var(--f-mono);font-size:.6rem;color:var(--ink-35);letter-spacing:.06em;min-width:56px;padding-top:3px;flex-shrink:0">' + esc(ed.week||'') + '</span>' +
+                '<div style="flex:1">' +
+                  '<p style="font-family:var(--f-disp);font-size:1rem;font-weight:700;color:var(--ink);line-height:1.28;margin-bottom:5px">' + esc(f.headline||'Community Intelligence Brief') + '</p>' +
+                  '<p style="font-size:.78rem;color:var(--ink-60)">Featured: <span style="color:var(--tide)">' + esc(f.cityName||'') + '</span>' + (bs.length ? ' \xb7 Also: ' + bs.join(' \xb7 ') : '') + '</p>' +
+                '</div>' +
+                '<span style="color:var(--ink-35);font-size:.8rem;padding-top:3px;flex-shrink:0">\u2192</span>' +
+              '</div>';
+            }).join('') +
+          '</div>';
+        }).join('')
+      ) +
+      '</div>' +
 
       // Subscribe CTA
-      '<div style="margin-top:24px;padding:18px 22px;background:var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">' +
-        '<div><p style="font-family:var(--f-disp);font-size:.88rem;font-weight:700;color:var(--paper);margin-bottom:2px">Get next week\'s edition.</p><p style="font-size:.74rem;color:rgba(244,238,225,.42)">Delivered every Monday. Free forever.</p></div>' +
+      '<div style="margin-top:8px;padding:20px 24px;background:var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
+        '<div><p style="font-family:var(--f-disp);font-size:.92rem;font-weight:700;color:var(--paper);margin-bottom:3px">Get next week\'s edition.</p><p style="font-size:.76rem;color:rgba(244,238,225,.42)">Delivered every Monday. Free forever.</p></div>' +
         '<div style="display:flex;gap:5px">' +
-          '<input id="archSubEmail" type="email" placeholder="Your email" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:6px 10px;font-size:.82rem;color:var(--paper);outline:none;width:150px">' +
-          '<button onclick="archSub()" style="background:var(--honey);border:none;color:var(--ink);border-radius:6px;padding:6px 12px;font-family:var(--f-mono);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-weight:700">Subscribe</button>' +
+          '<input id="archSubEmail" type="email" placeholder="Your email" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:7px 11px;font-size:.84rem;color:var(--paper);outline:none;width:155px">' +
+          '<button onclick="archSub()" style="background:var(--honey);border:none;color:var(--ink);border-radius:6px;padding:7px 13px;font-family:var(--f-mono);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-weight:700">Subscribe</button>' +
         '</div>' +
-      '</div>' +
       '</div>' +
 
       '</div>';
 
-    // Wire archive subscribe
     window.archSub = async function() {
       const input = document.getElementById('archSubEmail');
       const email = input ? input.value.trim() : '';
       if (!email.includes('@')) return;
       try {
         await fetch('/api/sync', { method:'POST', headers:{'content-type':'application/json'},
-          body: JSON.stringify({ key:'subscribers/global/'+Date.now(), value:{ email, source:'archive', at:new Date().toISOString() } }) });
+          body: JSON.stringify({ key:'subscribers/global/'+Date.now(), value:{ email:email, source:'archive', at:new Date().toISOString() } }) });
         if (input) input.value = '';
         alert('\u2713 Subscribed! You\'ll get The Edition every Monday.');
         window.track('email_subscribe',{ source:'archive' });
@@ -7778,9 +7764,10 @@ async function renderEditionsArchive() {
     };
 
   } catch(e) {
-    view.innerHTML = '<div style="max-width:780px;margin:0 auto;padding:60px 20px;text-align:center"><p style="color:var(--ink-soft)">Could not load archive. ' + esc(e.message) + '</p></div>';
+    view.innerHTML = '<div style="padding:100px 20px 40px;max-width:700px;margin:0 auto;text-align:center"><p style="color:var(--ink-soft)">Could not load archive. ' + esc(e.message) + '</p></div>';
   }
 }
+
 
 window.gscSave = async function() {
   const input = document.getElementById('gscFilename');
