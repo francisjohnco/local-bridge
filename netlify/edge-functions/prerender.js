@@ -62,7 +62,7 @@ export default async function(request, context) {
     const weekSlug = parts[1] || 'latest';
     return new Response(
       '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>The Local Bridge Edition ' + weekSlug + '</title>' +
-      '<meta name="description" content="This week's community intelligence from The Local Bridge — local insights, sourced from trusted partners, summarized for residents.">' +
+      `<meta name="description" content="This week's community intelligence from The Local Bridge — local insights, sourced from trusted partners, summarized for residents.">` +
       '<link rel="canonical" href="https://thelocalbridge.com/edition/' + weekSlug + '">' +
       '<meta property="og:title" content="The Local Bridge Edition ' + weekSlug + '">' +
       '</head><body><h1>The Local Bridge Edition</h1><p>Community intelligence for residents — local insights sourced and summarized from trusted community partners.</p>' +
